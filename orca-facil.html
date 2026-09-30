@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Orça Fácil — orçamentos profissionais em 1 minuto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F5F4F0;--ink:#1C1D22;--soft:#6C6F7A;--line:#E2E0D8;--paper:#FFFFFF;--brand:#1F6E5A;--brand-ink:#fff;--accent:#E8F3EE;--bad:#B3261E;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Inter,system-ui,sans-serif}
+.app{max-width:1120px;margin:0 auto;padding:20px 16px 60px;display:grid;gap:26px}
+@media(min-width:900px){.app{grid-template-columns:400px 1fr;align-items:start}.preview{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px)}}
+h1{font:600 1.7rem/1.1 Fraunces,Georgia,serif;margin:0}
+.tag{color:var(--soft);margin:4px 0 18px}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px}
+.panel h2{font:600 1rem Inter,sans-serif;margin:0 0 12px;color:var(--soft);letter-spacing:.02em}
+label{display:block;font-size:.82rem;font-weight:600;color:var(--soft);margin:10px 0 4px}
+input,textarea{width:100%;font:inherit;color:var(--ink);background:var(--paper);border:1.5px solid var(--line);border-radius:9px;padding:9px 11px}
+input:focus,textarea:focus,button:focus-visible{outline:3px solid var(--brand);outline-offset:1px}
+textarea{resize:vertical;min-height:52px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.item{border:1px solid var(--line);border-radius:11px;padding:12px;margin-bottom:10px;background:#fcfbf9}
+.item .l1{display:grid;grid-template-columns:1fr 34px;gap:8px;align-items:start}
+.item .l2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px}
+.x{border:0;background:transparent;color:var(--soft);font-size:1.3rem;cursor:pointer;border-radius:8px;height:38px}
+.x:hover{color:var(--bad)}
+button.btn{font:600 .95rem Inter,sans-serif;border:0;border-radius:99px;padding:11px 18px;cursor:pointer;background:var(--brand);color:var(--brand-ink)}
+button.ghost{background:transparent;color:var(--brand);border:1.5px solid var(--brand)}
+.bar{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+
+/* ORÇAMENTO (impressão) */
+.doc{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:clamp(20px,4vw,40px);box-shadow:0 10px 40px rgba(30,40,30,.06)}
+.doc-head{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:flex-start;border-bottom:2px solid var(--ink);padding-bottom:18px}
+.biz{font:600 1.4rem Fraunces,serif}
+.biz-sub{color:var(--soft);font-size:.9rem;white-space:pre-line}
+.doc-head .meta{text-align:right;font-size:.9rem;color:var(--soft)}
+.doc-head .meta .big{font:600 1.1rem Fraunces,serif;color:var(--ink);letter-spacing:.06em}
+.to{margin:20px 0 8px;color:var(--soft);font-size:.85rem}
+.to b{color:var(--ink);font-size:1rem;font-weight:600;display:block}
+table{width:100%;border-collapse:collapse;margin-top:14px;font-size:.92rem}
+th{text-align:left;color:var(--soft);font-weight:600;font-size:.78rem;border-bottom:1px solid var(--line);padding:8px 6px}
+th.r,td.r{text-align:right}
+td{padding:10px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+td .d{color:var(--soft);font-size:.82rem}
+.tots{margin-top:16px;margin-left:auto;width:min(320px,100%)}
+.tots .l{display:flex;justify-content:space-between;padding:5px 0;font-size:.92rem}
+.tots .grand{border-top:2px solid var(--ink);margin-top:6px;padding-top:10px;font:600 1.35rem Fraunces,serif}
+.tots .grand span:last-child{color:var(--brand)}
+.notes{margin-top:22px;padding-top:16px;border-top:1px solid var(--line);color:var(--soft);font-size:.85rem;white-space:pre-line}
+.valid{margin-top:6px;font-size:.85rem;color:var(--soft)}
+.empty{color:var(--soft);font-style:italic}
+@media print{
+  body{background:#fff}.app{display:block;padding:0}
+  .editor,.tag,h1.page,.bar-print{display:none!important}
+  .doc{border:0;box-shadow:none;border-radius:0;padding:0}
+  .preview{position:static}
+}
+.print-bar{margin-top:14px}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="editor">
+    <h1 class="page">Orça Fácil</h1>
+    <p class="tag">Preencha e gere um orçamento com cara profissional pra mandar pro cliente.</p>
+
+    <div class="panel">
+      <h2>Seus dados</h2>
+      <label for="biz">Nome ou empresa</label><input id="biz" placeholder="Ex: João Reformas">
+      <label for="bizsub">Contato (telefone, e-mail, cidade)</label>
+      <textarea id="bizsub" placeholder="(11) 90000-0000&#10;joao@email.com"></textarea>
+    </div>
+
+    <div class="panel" style="margin-top:16px">
+      <h2>Cliente</h2>
+      <label for="cli">Nome do cliente</label><input id="cli" placeholder="Ex: Maria Souza">
+      <div class="two">
+        <div><label for="num">Nº do orçamento</label><input id="num" value="001"></div>
+        <div><label for="val">Válido por (dias)</label><input id="val" inputmode="numeric" value="15"></div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:16px">
+      <h2>Itens</h2>
+      <div id="items"></div>
+      <div class="bar"><button class="btn ghost" id="add">Adicionar item</button></div>
+    </div>
+
+    <div class="panel" style="margin-top:16px">
+      <h2>Ajustes e observações</h2>
+      <div class="two">
+        <div><label for="disc">Desconto (R$)</label><input id="disc" inputmode="decimal" placeholder="0"></div>
+        <div><label for="fee">Taxa/deslocamento (R$)</label><input id="fee" inputmode="decimal" placeholder="0"></div>
+      </div>
+      <label for="notes">Observações</label>
+      <textarea id="notes" placeholder="Formas de pagamento, prazo de entrega, garantia..."></textarea>
+    </div>
+  </div>
+
+  <div class="preview">
+    <div class="doc" id="doc">
+      <div class="doc-head">
+        <div><div class="biz" id="pBiz">Seu nome aqui</div><div class="biz-sub" id="pBizSub"></div></div>
+        <div class="meta"><div class="big">ORÇAMENTO</div><div id="pNum">Nº 001</div><div id="pDate"></div></div>
+      </div>
+      <div class="to">Para<b id="pCli" class="empty">— nome do cliente —</b></div>
+      <table>
+        <thead><tr><th>Descrição</th><th class="r">Qtd</th><th class="r">Valor un.</th><th class="r">Total</th></tr></thead>
+        <tbody id="pItems"></tbody>
+      </table>
+      <div class="tots" id="pTots"></div>
+      <div class="valid" id="pValid"></div>
+      <div class="notes" id="pNotes" hidden></div>
+    </div>
+    <div class="bar print-bar">
+      <button class="btn" id="print">Salvar / Imprimir PDF</button>
+      <button class="btn ghost" id="reset">Limpar tudo</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const num=v=>{v=String(v??'').replace(/\s/g,'').replace(/\.(?=\d{3}(\D|$))/g,'').replace(',','.');const n=parseFloat(v);return isFinite(n)?n:0};
+const brl=n=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const esc=s=>String(s||'').replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
+const KEY='orcafacil';
+
+function itemRow(d={desc:'',qtd:'1',un:''}){
+  const el=document.createElement('div');el.className='item';
+  el.innerHTML=`<div class="l1"><input data-k="desc" placeholder="Descrição do serviço ou produto">
+    <button class="x" aria-label="Remover item">×</button></div>
+    <div class="l2">
+      <div><label>Qtd</label><input data-k="qtd" inputmode="decimal"></div>
+      <div><label>Valor un. (R$)</label><input data-k="un" inputmode="decimal"></div>
+      <div><label>Total</label><input data-k="tot" readonly tabindex="-1"></div>
+    </div>`;
+  el.querySelector('[data-k=desc]').value=d.desc||'';
+  el.querySelector('[data-k=qtd]').value=d.qtd||'';
+  el.querySelector('[data-k=un]').value=d.un||'';
+  el.querySelector('.x').onclick=()=>{el.remove();render()};
+  $('items').appendChild(el);
+}
+
+function readItems(){return [...document.querySelectorAll('.item')].map(el=>({
+  desc:el.querySelector('[data-k=desc]').value,
+  qtd:el.querySelector('[data-k=qtd]').value,
+  un:el.querySelector('[data-k=un]').value}))}
+
+function state(){return{
+  biz:$('biz').value,bizsub:$('bizsub').value,cli:$('cli').value,
+  num:$('num').value,val:$('val').value,disc:$('disc').value,fee:$('fee').value,
+  notes:$('notes').value,items:readItems()}}
+
+function render(){
+  const s=state();
+  $('pBiz').textContent=s.biz||'Seu nome aqui';
+  $('pBizSub').textContent=s.bizsub;
+  $('pNum').textContent='Nº '+(s.num||'001');
+  const d=new Date();$('pDate').textContent=d.toLocaleDateString('pt-BR');
+  const cli=$('pCli');cli.textContent=s.cli||'— nome do cliente —';cli.classList.toggle('empty',!s.cli);
+
+  let sub=0;const rows=[];
+  document.querySelectorAll('.item').forEach(el=>{
+    const desc=el.querySelector('[data-k=desc]').value,q=num(el.querySelector('[data-k=qtd]').value),u=num(el.querySelector('[data-k=un]').value);
+    const t=q*u;sub+=t;el.querySelector('[data-k=tot]').value=t?brl(t):'';
+    if(desc||t)rows.push(`<tr><td>${esc(desc)||'<span class="d">(sem descrição)</span>'}</td><td class="r">${q||''}</td><td class="r">${u?brl(u):''}</td><td class="r">${brl(t)}</td></tr>`);
+  });
+  $('pItems').innerHTML=rows.length?rows.join(''):`<tr><td colspan="4" class="empty">Adicione itens ao lado…</td></tr>`;
+
+  const disc=num(s.disc),fee=num(s.fee),grand=Math.max(0,sub-disc+fee);
+  let t=`<div class="l"><span>Subtotal</span><span>${brl(sub)}</span></div>`;
+  if(disc>0)t+=`<div class="l"><span>Desconto</span><span>- ${brl(disc)}</span></div>`;
+  if(fee>0)t+=`<div class="l"><span>Taxa / deslocamento</span><span>${brl(fee)}</span></div>`;
+  t+=`<div class="l grand"><span>Total</span><span>${brl(grand)}</span></div>`;
+  $('pTots').innerHTML=t;
+
+  const vdays=num(s.val);$('pValid').textContent=vdays?`Orçamento válido por ${vdays} dias.`:'';
+  const n=$('pNotes');if(s.notes.trim()){n.hidden=false;n.textContent=s.notes}else n.hidden=true;
+
+  try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}
+}
+
+$('add').onclick=()=>{itemRow();$('items').lastChild.querySelector('input').focus()};
+$('print').onclick=()=>window.print();
+$('reset').onclick=()=>{if(confirm('Limpar todos os dados?')){localStorage.removeItem(KEY);location.reload()}};
+document.addEventListener('input',render);
+
+// carregar
+let saved=null;try{saved=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(saved){
+  ['biz','bizsub','cli','num','val','disc','fee','notes'].forEach(k=>$(k).value=saved[k]||'');
+  (saved.items&&saved.items.length?saved.items:[{}]).forEach(itemRow);
+}else{
+  $('biz').value='João Reformas';$('bizsub').value='(11) 91234-5678\njoao.reformas@email.com';
+  $('cli').value='Maria Souza';
+  [{desc:'Pintura de parede (sala e quarto)',qtd:'1',un:'900'},
+   {desc:'Mão de obra elétrica — 4 pontos',qtd:'4',un:'85'},
+   {desc:'Material (tinta, massa, fios)',qtd:'1',un:'420'}].forEach(itemRow);
+  $('notes').value='Pagamento: 50% na aprovação e 50% na entrega.\nPrazo estimado: 5 dias úteis.';
+}
+render();
+</script>
+</body>
+</html>
